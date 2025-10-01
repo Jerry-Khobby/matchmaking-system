@@ -5,9 +5,9 @@ import { Document,SchemaTypes,Types } from "mongoose";
 
 @Schema({timestamps:true})
 export class User extends Document{
-  @Prop({required:true,unique:true})
-  username:string;
-  @Prop({ default: 1200 })
+@Prop({required:true,unique:true})
+username:string;
+@Prop({ default: 1200 })
  rating: number;
  @Prop({ required: true })
  region: string; // "NA", "EU", "ASIA"
