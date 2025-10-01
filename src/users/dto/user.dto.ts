@@ -16,11 +16,6 @@ export class UserDto{
   @IsOptional()
   @IsNumber()
   rating?:number;
-
-
-  @IsNotEmpty()
-  @IsString()
-  matchHistory:string[];
 }
 
 
