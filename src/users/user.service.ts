@@ -48,8 +48,8 @@ async createUser(
   // Create the user with correct schema fields
   const newUser = new this.userModel({
     username,
-    region: encryptedRegion.toString('hex'),
-    status: encryptedStatus.toString('hex'),
+    region: encryptedRegion,
+    status: encryptedStatus,
     rating: rating || 1200,
   });
 
@@ -68,6 +68,42 @@ async createUser(
 
   this.logger.log(`User created: ${username}`);
   return { User: `User ${username} created successfully` };
+}
+
+
+
+//I want to grab a user by ID 
+async getUserById(id: string): Promise<any> {
+  // 1. Try to get user from DB
+  const user = await this.userModel.findById(id);
+  if (!user) {
+    throw new BadRequestException('User not found');
+  }
+
+  // 2. Check cache (cached by username, not id!)
+  const cachedUser = await this.cacheManager.get<CacheUser>(`user:${user.username}`);
+  if (!cachedUser) {
+    // If not cached, re-set it
+    await this.cacheManager.set(
+      `user:${user.username}`,
+      {
+        id: user.id,
+        username: user.username,
+        region: decrypt(user.region), // store readable region in cache
+      },
+      3600,
+    );
+  }
+
+  // 3. Decrypt sensitive fields
+  const decryptedRegion = decrypt(user.region);
+  const decryptedStatus = decrypt(user.status);
+
+  return {
+    ...user.toObject(),
+    region: decryptedRegion,
+    status: decryptedStatus,
+  };
 }
 
 

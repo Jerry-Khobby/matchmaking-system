@@ -21,4 +21,13 @@ export class UserController{
       UserDto.rating || 1200,
     );
   }
+
+@Get(':id')
+@HttpCode(HttpStatus.OK)
+@ApiOperation({summary:'Get user by ID'})
+@ApiResponse({status:200,description:'The user has been successfully retrieved.'})
+@ApiResponse({status:404,description:'User not found.'})
+async getUserbyId(@Param('id')id:string){
+  return this.userService.getUserById(id);
+}
   }

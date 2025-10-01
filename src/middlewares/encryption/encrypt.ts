@@ -11,16 +11,22 @@ const key = crypto.scryptSync(password, 'salt', 32);
 
 
 
-export function encrypt (data:any):Buffer{
-const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
-const textToEncrypt = String(data);
-const encryptedText = Buffer.concat([cipher.update(textToEncrypt,'utf8'), cipher.final()]);
-return encryptedText;
+export function encrypt(data: any): string {
+  const iv = crypto.randomBytes(16);
+  const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
+  const encryptedText = Buffer.concat([cipher.update(String(data), 'utf8'), cipher.final()]);
+  // Store iv + encrypted value in hex
+  return iv.toString('hex') + ':' + encryptedText.toString('hex');
 }
-export function decrypt (data:any):string{
+
+export function decrypt(data: string): string {
+  const [ivHex, encryptedHex] = data.split(':');
+  const iv = Buffer.from(ivHex, 'hex');
+  const encryptedText = Buffer.from(encryptedHex, 'hex');
   const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
-  const decryptedText = Buffer.concat([decipher.update(Buffer.from(data, 'hex')), decipher.final()]);
+  const decryptedText = Buffer.concat([decipher.update(encryptedText), decipher.final()]);
   return decryptedText.toString('utf8');
 }
+
 
 
