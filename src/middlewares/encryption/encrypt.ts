@@ -11,16 +11,16 @@ const key = crypto.scryptSync(password, 'salt', 32);
 
 
 
-export function encrypt (data:any):any{
+export function encrypt (data:any):Buffer{
 const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
-const textToEncrypt = data;
-const encryptedText = Buffer.concat([cipher.update(textToEncrypt), cipher.final()]);
+const textToEncrypt = String(data);
+const encryptedText = Buffer.concat([cipher.update(textToEncrypt,'utf8'), cipher.final()]);
 return encryptedText;
 }
-export function decrypt (data:any):any{
+export function decrypt (data:any):string{
   const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
   const decryptedText = Buffer.concat([decipher.update(Buffer.from(data, 'hex')), decipher.final()]);
-  return decryptedText;
+  return decryptedText.toString('utf8');
 }
 
 

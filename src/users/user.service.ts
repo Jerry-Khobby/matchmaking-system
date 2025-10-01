@@ -23,45 +23,52 @@ export class UserService{
 
   private logger=new Logger('UserService');
 
-  async createUser(username:string,
-    region:string,
-    status:string,
-    rating?:number,
-  ):Promise<{User:string}>{
-
-    // I have to check the cache 
-    const userCache = await this.cacheManager.get<CacheUser>(`user:${username}`);
-    if(userCache){
-      throw new BadRequestException('Username already exists');
-    }
-
-    const existingUser = await this.userModel.findOne({username});
-    if(existingUser){
-      throw new BadRequestException('Username already exists');
-    }
-
-    //I will have to encrypt the region, rating and status 
-    const newRegion=encrypt(region);
-    const newStatus=encrypt(status);
-    const newRating= encrypt(rating || 1200 );
-    // Create the user
-
-    const newUser = new this.userModel({
-      username,
-      newRegion,
-      newStatus,
-      newRating,
-    })
-    const savedUser = await newUser.save();
-
-    // Store the user in the cache
-    await this.cacheManager.set(`user:${username}`, {
-      id: savedUser._id,
-      username: savedUser.username,
-      region: savedUser.region,
-    },3600); // Cache for 1 hour
-    this.logger.log(`User created: ${username}`);
-    return {User:`User ${username} created successfully`};
+async createUser(
+  username: string,
+  region: string,
+  status: string,
+  rating?: number,
+): Promise<{ User: string }> {
+  // Check the cache
+  const userCache = await this.cacheManager.get<CacheUser>(`user:${username}`);
+  if (userCache) {
+    throw new BadRequestException('Username already exists');
   }
+
+  const existingUser = await this.userModel.findOne({ username });
+  if (existingUser) {
+    throw new BadRequestException('Username already exists');
+  }
+
+  // Encrypt sensitive fields
+  const encryptedRegion = encrypt(region);
+  const encryptedStatus = encrypt(status);
+  const encryptedRating = encrypt(rating || 1200);
+
+  // Create the user with correct schema fields
+  const newUser = new this.userModel({
+    username,
+    region: encryptedRegion.toString('hex'),
+    status: encryptedStatus.toString('hex'),
+    rating: rating || 1200,
+  });
+
+  const savedUser = await newUser.save();
+
+  // Store in cache (better to store raw values here, not encrypted)
+  await this.cacheManager.set(
+    `user:${username}`,
+    {
+      id: savedUser.id.toString(),
+      username: savedUser.username,
+      region: region, // keep region human-readable in cache
+    },
+    3600,
+  );
+
+  this.logger.log(`User created: ${username}`);
+  return { User: `User ${username} created successfully` };
+}
+
 
 }
