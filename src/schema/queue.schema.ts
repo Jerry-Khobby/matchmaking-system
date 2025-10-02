@@ -5,8 +5,8 @@ import { Document,SchemaTypes,Types } from "mongoose";
 
 @Schema({timestamps:true})
 export class Queue extends Document{
-  @Prop({type:SchemaTypes.ObjectId,ref:'User',required:true})
-  userId:string;
+@Prop({type:SchemaTypes.ObjectId,ref:'User',required:true})
+userId:string;
 @Prop({ required: true })
  username: string; // Denormalized for faster queries
  @Prop({ required: true })

@@ -6,6 +6,7 @@ import { UserDto } from "./dto/user.dto";
 import { CACHE_MANAGER } from "@nestjs/cache-manager";
 import type { Cache } from "cache-manager";
 import { encrypt,decrypt } from "src/middlewares/encryption/encrypt";
+import { isValidCountryCode } from "src/middlewares/regions/region.validation";
 
 
 
@@ -40,10 +41,14 @@ async createUser(
     throw new BadRequestException('Username already exists');
   }
 
+  // I want to check if the region is valid 
+  if (!isValidCountryCode(region)) {
+    throw new BadRequestException('Invalid region code');
+  }
+
   // Encrypt sensitive fields
   const encryptedRegion = encrypt(region);
   const encryptedStatus = encrypt(status);
-  const encryptedRating = encrypt(rating || 1200);
 
   // Create the user with correct schema fields
   const newUser = new this.userModel({
