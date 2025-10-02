@@ -13,6 +13,8 @@ userId:string;
  rating: number;
  @Prop({ required: true })
  region: string;
+ @Prop({required:true})
+ status: string; // idle, searching, in_match
  @Prop({ required: true })
  mode: string; // 1v1, 2v2, 5v5
  @Prop({ default: Date.now })

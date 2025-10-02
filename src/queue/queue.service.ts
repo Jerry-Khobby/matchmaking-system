@@ -31,20 +31,22 @@ export class QueueService {
 
     const decryptedRegion = decrypt(existingUser.region);
     const decryptedStatus = decrypt(existingUser.status);
-    
+
     if(decryptedStatus === "in_match"){
       throw new BadRequestException("User is currently in a match");
     }
 
-    if (decryptedStatus !== "idle") {
-      throw new BadRequestException("User is not idle");
-    }
+
+
+
+
 
     const newQueueEntry = new this.queueModel({
       userId,
       username: existingUser.username,
       rating: existingUser.rating,
-      region: "Searching",
+      region: decryptedRegion,
+      status: "searching",
       mode,
       joinedAt: new Date(),
     });
