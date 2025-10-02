@@ -5,7 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import {CacheModule} from '@nestjs/cache-manager';
 import { UserModule } from './users/user.module';
-import { User } from './schema/user.schema';
+import { QueueModule } from './queue/queue.module';
 
 @Module({
   imports: [
@@ -13,6 +13,7 @@ import { User } from './schema/user.schema';
     MongooseModule.forRoot(process.env.MONGODB_URI!),
     CacheModule.register({isGlobal:true}),
     UserModule,
+    QueueModule,
   ],
   controllers: [AppController],
   providers: [AppService],

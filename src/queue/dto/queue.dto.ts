@@ -1,18 +1,13 @@
-import { IsEmpty,IsString,IsNumber } from "class-validator";
+import { IsNotEmpty, IsString, IsNumber, Matches } from "class-validator";
 
+export class QueueDto {
+  @IsString()
+  @IsNotEmpty()
+  userId: string;
 
-export class QueueDto{
-    @IsEmpty()
-    userId:string;
-    @IsString()
-    @IsEmpty()
-    username:string;
-    @IsNumber()
-    @IsEmpty()
-    rating:number;
-    @IsString()
-    @IsEmpty()
-    region:string
-    @IsString()
-    mode:string;
+ // we’ll add a custom validator for country/region code
+
+  @IsString()
+  @Matches(/^\d+v\d+$/, { message: "Mode must be in the format '1v1', '1v2', '2v2', etc." })
+  mode: string;
 }

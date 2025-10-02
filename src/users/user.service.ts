@@ -2,7 +2,6 @@ import { Injectable,Logger,UnauthorizedException,BadRequestException,Inject } fr
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 import { User } from "src/schema/user.schema";
-import { UserDto } from "./dto/user.dto";
 import { CACHE_MANAGER } from "@nestjs/cache-manager";
 import type { Cache } from "cache-manager";
 import { encrypt,decrypt } from "src/middlewares/encryption/encrypt";
@@ -45,6 +44,8 @@ async createUser(
   if (!isValidCountryCode(region)) {
     throw new BadRequestException('Invalid region code');
   }
+
+
 
   // Encrypt sensitive fields
   const encryptedRegion = encrypt(region);
