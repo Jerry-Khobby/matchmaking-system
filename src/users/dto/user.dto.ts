@@ -1,21 +1,22 @@
-import {IsString,IsOptional,IsNotEmpty,IsNumber} from 'class-validator';
+import { IsString, IsOptional, IsNotEmpty, IsNumber, IsIn } from 'class-validator';
 
-export class UserDto{
+export class UserDto {
   @IsString()
   @IsNotEmpty()
-  username:string;
+  username: string;
 
   @IsString()
   @IsNotEmpty()
-  region:string;
+  region: string;
 
   @IsString()
   @IsOptional()
-  status?:string;
+  @IsIn(['idle', 'in_match', 'searching'], {
+    message: "Status must be either 'idle', 'in_match', or 'searching'",
+  })
+  status?: string;
 
   @IsOptional()
   @IsNumber()
-  rating?:number;
+  rating?: number;
 }
-
-
