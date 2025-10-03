@@ -10,6 +10,9 @@ async function bootstrap() {
     .setDescription('A systems that looks through the space and find matching pairs')
     .setVersion('1.0')
     .addTag('MatchMaking')
+    .addTag('User')
+    .addTag("Queue")
+    
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
