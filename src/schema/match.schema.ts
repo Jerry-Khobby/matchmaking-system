@@ -21,7 +21,7 @@ export class Match extends Document {
  }>;
  @Prop()
  winner: string; // userId of winner
- @Prop()
+ @Prop({type:Object})
  result: {
  winnerRating: number;
  loserRating: number;

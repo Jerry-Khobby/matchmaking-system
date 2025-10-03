@@ -7,6 +7,7 @@ import {CacheModule} from '@nestjs/cache-manager';
 import { UserModule } from './users/user.module';
 import { QueueModule } from './queue/queue.module';
 
+import { MatchmakingModule } from './matches/matchmarking.module';
 @Module({
   imports: [
     ConfigModule.forRoot({isGlobal:true}),
@@ -14,6 +15,7 @@ import { QueueModule } from './queue/queue.module';
     CacheModule.register({isGlobal:true}),
     UserModule,
     QueueModule,
+    MatchmakingModule,
   ],
   controllers: [AppController],
   providers: [AppService],
