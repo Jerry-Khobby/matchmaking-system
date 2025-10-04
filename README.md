@@ -1397,7 +1397,7 @@ NODE_ENV=production
 PORT=3000
 
 # MongoDB (Use MongoDB Atlas for production)
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/matchmaking?retryWrites=true&w=majority
+MONGODB_URI=mongodb://mongo:27017/matchmaking
 
 # Redis (Use Redis Cloud for production)
 REDIS_HOST=your-redis-host.com
